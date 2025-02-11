@@ -94,3 +94,28 @@ export const getAppointmentsFromUser = async (req, res) => {
     })
   }
 }
+
+export const deleteAppointment = async (req, res) => {
+  try {
+    //Obtiene el ID de la cita
+    const { uid } = req.params;
+
+    //Buscando la cita en la base de datos
+    const appointment = await Appointment.findByIdAndUpdate(uid, { status: "CANCELLED" }, { new: true })
+
+    //Respuesta exitosa
+    return res.status(200).json({
+      success: true,
+      message: "Cita Cancelada",
+      appointment,
+    });
+
+  } catch (err) {
+    //Manejo de errores.
+    return res.status(500).json({
+      success: false,
+      message: "Error al cancelar la cita",
+      error: err.message,
+    });
+  }
+}
