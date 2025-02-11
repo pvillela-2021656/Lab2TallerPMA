@@ -1,0 +1,20 @@
+{
+    "Funciones/endpoints":[
+        {
+            "name": "Lista de Citas de un Usuario",
+            "URL": "http://127.0.0.1:3004/adoptionSystem/v1/appointment/listAppointments/uid",
+            "Method": "GET",
+            "body": "raw",
+            "expected-result": {
+
+            }
+        },
+        {
+            "name": "Cancelación de cita de un Usuario",
+            "URL": "http://127.0.0.1:3004/adoptionSystem/v1/appointment/deleteAppointment/uid",
+            "Method": "DELETE",
+            "body": "raw"
+            
+        }
+    ]
+}
