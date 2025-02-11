@@ -1,5 +1,6 @@
 import Appointment from "../appointment/appointment.model.js";
 import Pet from "../pet/pet.model.js";
+import User from "../user/user.model.js";
 
 export const saveAppointment = async (req, res) => {
   try {
@@ -45,7 +46,7 @@ export const saveAppointment = async (req, res) => {
       success: true,
       msg: `Cita creada exitosamente en fecha ${data.date}`,
     });
-    
+
   } catch (error) {
     console.error(error);
     return res.status(500).json({
@@ -56,28 +57,40 @@ export const saveAppointment = async (req, res) => {
   }
 };
 
-export const getAppointments = async (req, res) => {
-  try{
-      const { limite = 5, desde = 0 } = req.query
-      const query = { status: true }
+export const getAppointmentsFromUser = async (req, res) => {
+  try {
+    const { limite = 5, desde = 0 } = req.query
+    const { uid } = req.params;
 
-      const [total, users ] = await Promise.all([
-          User.countDocuments(query),
-          User.find(query)
-              .skip(Number(desde))
-              .limit(Number(limite))
-      ])
+    const user = await User.findById(uid)
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "No se pudo obtener a este User"
+      })
+    }
 
-      return res.status(200).json({
-          success: true,
-          total,
-          users
-      })
-  }catch(err){
-      return res.status(500).json({
-          success: false,
-          message: "Error al obtener las citas",
-          error: err.message
-      })
+    const query = { status: "CREATED", user: uid }
+
+    const [total, appointment] = await Promise.all([
+      Appointment.countDocuments(query),
+      Appointment.find(query)
+        .skip(Number(desde))
+        .skip(Number(limite))
+
+    ])
+    return res.status(200).json({
+      success: true,
+      total,
+      user,
+      appointment
+    })
+
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: "Error al obtener el usuario",
+      error: err.message
+    })
   }
 }
