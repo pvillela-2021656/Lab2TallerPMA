@@ -122,3 +122,23 @@ export const deleteAppointment = async (req, res) => {
     });
   }
 }
+
+export const updateAppointment = async(req, res) => {
+  try{
+    const { uid } = req.params
+    const { newDate } = req.body
+    
+    const appointment = await Appointment.findByIdAndUpdate(uid, { date: newDate }, { new: true });
+
+    return res.status(200).json({
+      success: true,
+      message: "Cita Actualizada"
+    })
+  }catch(err){
+    return res.status(500).json({
+      success: false,
+      message: "Error al actualizar la cita",
+      error: err.message
+    })
+  }
+}

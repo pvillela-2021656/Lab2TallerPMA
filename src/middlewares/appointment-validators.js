@@ -25,4 +25,11 @@ export const deleteAppointmentValidator = [
     handleErrors
 ];
 
+//Middleware de validación para actualizar una cita.
+export const updateAppointmentValidator = [
+    param("uid", "No es un ID válido").isMongoId(),
+    validarCampos,
+    handleErrors
+];
+
 
